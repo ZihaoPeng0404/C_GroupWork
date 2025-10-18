@@ -42,8 +42,7 @@ void mainMenu(void) {
     }
 }
 
-/*void startNextWave(void) {
-    printf("Starting wave %d...\n", waveCount);
-    runWave();
+void startNextWave(void) {
+    /*runWave();*/
     waveCount++;
-}*/
+}
