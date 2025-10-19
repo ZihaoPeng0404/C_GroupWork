@@ -5,5 +5,6 @@
 
 void drawBoard(void);
 void resetBoard(void);
+int inBoundsCheck(int x, int y);
 
 #endif

@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "pathfinding.h": "c"
+        "pathfinding.h": "c",
+        "game.h": "c"
     }
 }

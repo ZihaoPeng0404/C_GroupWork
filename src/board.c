@@ -48,3 +48,13 @@ void drawBoard(void) {
     for (x = 1; x <= GRID_X + 4; x++) printf("#   ");
     printf("\n");
 }
+
+int inBoundsCheck(int x, int y) {
+    if (x < 0 || x > GRID_X || y < 0 || y > GRID_Y) {
+        return 0;
+    }
+    return 1;
+} 
+void checkSurroundingTiles(int x, int y) {
+
+}
