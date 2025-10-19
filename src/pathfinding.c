@@ -80,7 +80,6 @@ int findPath(void) {
     PriorityQueue pq = {{{0}}, 0};
 
     int visited[7][9] = {0};
-    gameBoard[3][7] = '#';
     addElement(&pq, (Node){9, 3, 0, 10, 10});
     while (pq.size > 0) {
         Node current = pop(&pq);
