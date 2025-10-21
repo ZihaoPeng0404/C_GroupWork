@@ -68,13 +68,13 @@ void runWave(void) {
         gameBoard[3][8] = '0' + waveCount;
         drawBoard();
         int k;
-        for (k = 0; k < 1000000; k++){;}
+        for (k = 0; k < GAME_DELAY; k++){;}
     }
     while (anyEnemiesOnBoard()) {
         moveEnemies();
         drawBoard();
         int k;
-        for (k = 0; k < 1000000; k++){;}
+        for (k = 0; k < GAME_DELAY; k++){;}
     }
     waveCount++;
 }

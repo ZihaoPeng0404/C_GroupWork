@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-int placeTower(void);
-int isValidCoordinate(const char *input, int *x, int *y);
+void placeTower(void);
+int isValidCoordinate(int x, int y);
 
 #endif

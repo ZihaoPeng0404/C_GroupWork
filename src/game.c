@@ -38,8 +38,7 @@ void mainMenu(void) {
 
         switch (choice) {
             case 1:
-                printf("place tower");
-                /*placeTower();*/
+                placeTower();
                 break;
             case 2:
                 runWave();
