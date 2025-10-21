@@ -16,6 +16,10 @@ int isDigit(char c) {
 }
 
 void placeTower(void) {
+    if (playerMoney < 100) {
+        printf("Not Enough Money");
+        return;
+    }
     char coord[4];
     int x, y;
     int validInput = 0;
