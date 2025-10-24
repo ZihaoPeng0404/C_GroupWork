@@ -27,10 +27,11 @@ void mainMenu(void) {
         printf("\n1 - Place a new tower (100$)\n");
         printf("2 - Start next wave\n");
         printf("3 - Save Game\n");
+        printf("4 - Load Game\n");
         #ifdef DEBUG
             printf(ANSI_COLOR_RED);
-            printf("4 - Test Pathfiding\n");
-            printf("5 - Test Enemies\n");
+            printf("5 - Test Pathfiding\n");
+            printf("6 - Test Enemies\n");
             printf(ANSI_COLOR_RESET);
         #endif
         printf("Choice: ");
@@ -50,21 +51,39 @@ void mainMenu(void) {
                 }
                 break;
             case 3:
-                printf("saveGame");
+                saveGame();
+                break;
+            case 4:
+                if (loadGameInteractive()) {
+                    printf("Game state restored!\n");
+                }
                 break;
             #ifdef DEBUG
-                case 4:
+                case 5:
                     findPath();
                     break;
-                case 5:
+                case 6:
                     runWave();
                     break;
             #endif
             default:
                 printf("Invalid choice\n");
         }
+        
+        /* Check if player won */
+        if (waveCount > 10) {
+            printf("\n=== CONGRATULATIONS! ===\n");
+            printf("You successfully defended the crystal through all 10 waves!\n");
+            printf("Final Score - Crystal Health: %d, Money: %d\n", crystalHealth, playerMoney);
+            gameLost = 1;
+        }
     }
-    printf("GAME OVER\n");
+    
+    if (crystalHealth <= 0) {
+        printf("\n=== GAME OVER ===\n");
+        printf("The crystal has been destroyed!\n");
+        printf("You survived %d waves.\n", waveCount - 1);
+    }
 }
 
 void startNextWave(void) {
