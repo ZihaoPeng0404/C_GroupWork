@@ -4,7 +4,8 @@
 #include "game.h"
 
 void saveGame(void);
-int loadGame(void);
+int loadGame(const char *filename);
+int loadGameInteractive(void);
 void xorEncryptDecrypt(char *data, int size, char key);
 
 #endif
