@@ -4,17 +4,6 @@
 #include "game.h"
 
 /*
- * Checks if a coordinate is valid (placeholder function).
- * 
- * Input: columnPos - x coordinate
- *        rowPos - y coordinate
- * Output: Returns 0 (not implemented)
- */
-int isValidCoordinate(int columnPos, int rowPos) {
-    return 0;
-}
-
-/*
  * Checks if a character is a letter.
  * 
  * Input: inputChar - character to check

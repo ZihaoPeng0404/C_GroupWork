@@ -5,7 +5,6 @@
 
 /* Function declarations */
 void placeTower(GameState_t *gameState);
-int isValidCoordinate(int columnPos, int rowPos);
 int isLetter(char inputChar);
 int isDigit(char inputChar);
 
