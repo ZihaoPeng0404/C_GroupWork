@@ -3,26 +3,26 @@
 
 #include "game.h"
 
-#define MAX 100
-
-typedef struct
-{
+/* Node structure for A* pathfinding */
+typedef struct {
     int x;
     int y;
-    int g;
-    int h;
-    int f;
+    int g;          /* Cost from start */
+    int h;          /* Heuristic to goal */
+    int f;          /* Total cost (g + h) */
     int parentX;
     int parentY;
-} Node;
+} Node_t;
 
-typedef struct 
-{
-    Node Nodes[MAX];
+/* Priority queue for pathfinding */
+typedef struct {
+    Node_t nodes[MAX_QUEUE_SIZE];
     int size;
-} PriorityQueue;
+} PriorityQueue_t;
 
-int findPath(void);
-Node getParentNode(int x, int y);
-Node getGoalNode(void);
+/* Function declarations */
+int findPath(const char gameBoard[GRID_Y][GRID_X]);
+Node_t getParentNode(int x, int y);
+Node_t getGoalNode(void);
+
 #endif

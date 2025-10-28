@@ -3,6 +3,11 @@
 
 #include "game.h"
 
-void runWave(void);
+/* Function declarations */
+void runWave(GameState_t *gameState);
+int isEnemy(char inputChar);
+void damageEnemy(int columnPos, int rowPos, GameState_t *gameState);
+void moveEnemies(GameState_t *gameState);
+int anyEnemiesOnBoard(const GameState_t *gameState);
 
 #endif

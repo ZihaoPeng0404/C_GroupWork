@@ -1,72 +1,113 @@
-#include <stdio.h>
+#include <stdio.h>  /* printf, scanf */
 #include "tower.h"
 #include "pathfinding.h"
 #include "game.h"
 
-int isValidCoordinate(int x, int y) {
+/*
+ * Checks if a coordinate is valid (placeholder function).
+ * 
+ * Input: columnPos - x coordinate
+ *        rowPos - y coordinate
+ * Output: Returns 0 (not implemented)
+ */
+int isValidCoordinate(int columnPos, int rowPos) {
     return 0;
 }
 
-int isLetter(char c) {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+/*
+ * Checks if a character is a letter.
+ * 
+ * Input: inputChar - character to check
+ * Output: Returns 1 if letter, 0 otherwise
+ */
+int isLetter(char inputChar) {
+    return (inputChar >= 'a' && inputChar <= 'z') || 
+           (inputChar >= 'A' && inputChar <= 'Z');
 }
 
-int isDigit(char c) {
-    return (c >= '0' && c <= '9');
+/*
+ * Checks if a character is a digit.
+ * 
+ * Input: inputChar - character to check
+ * Output: Returns 1 if digit, 0 otherwise
+ */
+int isDigit(char inputChar) {
+    return (inputChar >= '0' && inputChar <= '9');
 }
 
-void placeTower(void) {
-    if (playerMoney < 100) {
-        printf("Not Enough Money");
+/*
+ * Attempts to place a tower at user-specified coordinates.
+ * Validates input, checks bounds, ensures valid path exists.
+ * Deducts tower cost from player money if successful.
+ * 
+ * Input: gameState - pointer to current game state
+ * Output: Modifies gameBoard and playerMoney in gameState
+ */
+void placeTower(GameState_t *gameState) {
+    if (gameState->playerMoney < TOWER_COST) {
+        printf("Not Enough Money\n");
         return;
     }
+    
     char coord[4];
-    int x, y;
+    int columnPos, rowPos;
     int validInput = 0;
 
     while (!validInput) {
         printf("Enter coordinates (e.g. a1, d5): ");
-        scanf("%3s", coord);
+        if (scanf("%3s", coord) != 1) {
+            printf("Invalid Input\n");
+            /* Clear input buffer */
+            int inputChar;
+            while ((inputChar = getchar()) != '\n' && inputChar != EOF);
+            continue;
+        }
 
-        /*Convert first letter to lowercase if needed*/
-        if (coord[0] >= 'A' && coord[0] <= 'Z')
+        /* Convert first letter to lowercase if needed */
+        if (coord[0] >= 'A' && coord[0] <= 'Z') {
             coord[0] = coord[0] + 32;
+        }
 
-        /*Basic format check*/
+        /* Basic format check */
         if (!isLetter(coord[0]) || !isDigit(coord[1])) {
             printf("Invalid Input\n");
             continue;
         }
 
-        /*Convert to zero-indexed coordinates*/
-        y = coord[0] - 'a';
-        sscanf(coord + 1, "%d", &x);
-        x--;
+        /* Convert to zero-indexed coordinates */
+        rowPos = coord[0] - 'a';
+        int parsed = sscanf(coord + 1, "%d", &columnPos);
+        if (parsed != 1) {
+            printf("Invalid Input\n");
+            continue;
+        }
+        columnPos--;
 
-        /*Bounds check*/
-        if (x < 0 || x >= GRID_X || y < 0 || y >= GRID_Y) {
+        /* Bounds check */
+        if (columnPos < 0 || columnPos >= GRID_X || rowPos < 0 || rowPos >= GRID_Y) {
             printf("Out of bounds\n");
             continue;
         }
 
-        /*Check for existing tower*/
-        if (gameBoard[y][x] == '#') {
+        /* Check for existing tower */
+        if (gameState->gameBoard[rowPos][columnPos] == TOWER_CHAR) {
             printf("There is already a Tower there\n");
             continue;
         }
 
-        /*Place tower temporarily*/
-        gameBoard[y][x] = '#';
+        /* Place tower temporarily */
+        gameState->gameBoard[rowPos][columnPos] = TOWER_CHAR;
 
-        /*Check for path to crystal*/
-        if (!findPath()) {
-            gameBoard[y][x] = '.';
+        /* Check for path to crystal */
+        if (!findPath(gameState->gameBoard)) {
+            gameState->gameBoard[rowPos][columnPos] = EMPTY_TILE;
             printf("There has to be a valid path to the crystal\n");
             continue;
         }
 
-        printf("Tower placed at %c%d\n", 'a' + x, y + 1);
+           printf("Tower placed at %c%d\n", 'a' + rowPos, columnPos + 1);
         validInput = 1;
     }
-    playerMoney -= 100;
+    
+    gameState->playerMoney -= TOWER_COST;
 }

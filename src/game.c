@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h>  /* printf, scanf, getchar */
 #include <stdlib.h>
 #include "game.h"
 #include "board.h"
@@ -10,60 +10,76 @@
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-char gameBoard[GRID_Y][GRID_X];
-int crystalHealth = 100;
-int waveCount = 1;
-int playerMoney = 200;
-
-void initGame(void) {
-    resetBoard();
+/*
+ * Initializes a new game state with default values.
+ * 
+ * Input: gameState - pointer to GameState_t to initialize
+ * Output: Modifies gameState with initial values
+ */
+void initGame(GameState_t *gameState) {
+    gameState->crystalHealth = INITIAL_CRYSTAL_HEALTH;
+    gameState->waveCount = INITIAL_WAVE_COUNT;
+    gameState->playerMoney = INITIAL_PLAYER_MONEY;
+    resetBoard(gameState->gameBoard);
 }
 
-void mainMenu(void) {
+/*
+ * Main game menu loop.
+ * Handles user input and game flow until game over or win.
+ * 
+ * Input: gameState - pointer to current game state
+ * Output: Modifies gameState throughout gameplay
+ */
+void mainMenu(GameState_t *gameState) {
     int choice;
     int gameLost = 0;
+    
     while (gameLost == 0) {
-        drawBoard();
-        printf("\n1 - Place a new tower (100$)\n");
+        drawBoard(gameState);
+        printf("\n1 - Place a new tower (%d$)\n", TOWER_COST);
         printf("2 - Start next wave\n");
         printf("3 - Save Game\n");
         printf("4 - Load Game\n");
         #ifdef DEBUG
             printf(ANSI_COLOR_RED);
-            printf("5 - Test Pathfiding\n");
+            printf("5 - Test Pathfinding\n");
             printf("6 - Test Enemies\n");
             printf(ANSI_COLOR_RESET);
         #endif
-        printf("Choice: ");
-        scanf("%d", &choice);
 
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF);
+        printf("Choice: ");
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Please enter a number.\n");
+            /* Clear the input buffer */
+            int inputChar;
+            while ((inputChar = getchar()) != '\n' && inputChar != EOF);
+            continue;
+        }
         
         switch (choice) {
             case 1:
-                placeTower();
+                placeTower(gameState);
                 break;
             case 2:
-                runWave();
-                if (crystalHealth <= 0) {
+                runWave(gameState);
+                if (gameState->crystalHealth <= 0) {
                     gameLost = 1;
                 }
                 break;
             case 3:
-                saveGame();
+                saveGame(gameState);
                 break;
             case 4:
-                if (loadGameInteractive()) {
+                if (loadGameInteractive(gameState)) {
                     printf("Game state restored!\n");
                 }
                 break;
             #ifdef DEBUG
                 case 5:
-                    findPath();
+                    findPath(gameState->gameBoard);
                     break;
                 case 6:
-                    runWave();
+                    runWave(gameState);
                     break;
             #endif
             default:
@@ -71,22 +87,28 @@ void mainMenu(void) {
         }
         
         /* Check if player won */
-        if (waveCount > 10) {
+        if (gameState->waveCount > MAX_WAVES) {
             printf("\n=== CONGRATULATIONS! ===\n");
-            printf("You successfully defended the crystal through all 10 waves!\n");
-            printf("Final Score - Crystal Health: %d, Money: %d\n", crystalHealth, playerMoney);
+            printf("You successfully defended the crystal through all %d waves!\n", MAX_WAVES);
+            printf("Final Score - Crystal Health: %d, Money: %d\n", 
+                   gameState->crystalHealth, gameState->playerMoney);
             gameLost = 1;
         }
     }
     
-    if (crystalHealth <= 0) {
+    if (gameState->crystalHealth <= 0) {
         printf("\n=== GAME OVER ===\n");
         printf("The crystal has been destroyed!\n");
-        printf("You survived %d waves.\n", waveCount - 1);
+        printf("You survived %d waves.\n", gameState->waveCount - 1);
     }
 }
 
-void startNextWave(void) {
-    /*runWave();*/
-    waveCount++;
+/*
+ * Starts the next wave of enemies.
+ * 
+ * Input: gameState - pointer to current game state
+ * Output: Increments waveCount
+ */
+void startNextWave(GameState_t *gameState) {
+    gameState->waveCount++;
 }

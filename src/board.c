@@ -1,60 +1,70 @@
-#include <stdio.h>
+#include <stdio.h>  /* printf */
 #include "board.h"
 
-void resetBoard(void) {
-    int y;
-    for (y = 0; y < GRID_Y; y++) {
-        int x;
-        for (x = 0; x < GRID_X; x++) {
-            gameBoard[y][x] = '.';
+/*
+ * Resets the game board to empty state.
+ * 
+ * Input: gameBoard - 2D array representing the game board
+ * Output: Sets all tiles to EMPTY_TILE
+ */
+void resetBoard(char gameBoard[GRID_Y][GRID_X]) {
+    int rowIndex;
+    for (rowIndex = 0; rowIndex < GRID_Y; rowIndex++) {
+        int columnIndex;
+        for (columnIndex = 0; columnIndex < GRID_X; columnIndex++) {
+            gameBoard[rowIndex][columnIndex] = EMPTY_TILE;
         }
     }
 }
 
-void drawBoard(void) {
-    printf("\nCrystal Health: %d/100   Wave: %d/10   Money: %d$\n", crystalHealth, waveCount, playerMoney);
+/*
+ * Draws the current game board with borders and labels.
+ * Displays crystal health, wave count, and player money.
+ * 
+ * Input: gameState - pointer to current game state
+ * Output: Prints board to stdout
+ */
+void drawBoard(const GameState_t *gameState) {
+    printf("\nCrystal Health: %d/%d   Wave: %d/%d   Money: %d$\n", 
+           gameState->crystalHealth, MAX_CRYSTAL_HEALTH, 
+           gameState->waveCount, MAX_WAVES, gameState->playerMoney);
 
     printf("#   #   ");
-    int x;
-    for (x = 1; x <= GRID_X; x++) printf("%d   ", x);
-    printf("#   #");
-    printf("\n");
-    for (x = 1; x <= GRID_X + 4; x++) printf("#   ");
+    int columnIndex;
+    for (columnIndex = 1; columnIndex <= GRID_X; columnIndex++) {
+        printf("%d   ", columnIndex);
+    }
+    printf("#   #\n");
+    
+    for (columnIndex = 1; columnIndex <= GRID_X + 4; columnIndex++) {
+        printf("#   ");
+    }
     printf("\n");
 
-    int y;
-    for (y = 0; y < GRID_Y; y++) {
-        /*Handle portal placement*/
-        if (y == 3) {
-            printf("%c   @   ", 'A' + y);
-        }
-        else {
-            printf("%c   #   ", 'A' + y);
+    int rowIndex;
+    for (rowIndex = 0; rowIndex < GRID_Y; rowIndex++) {
+        /* Handle portal placement */
+        if (rowIndex == START_Y) {
+            printf("%c   %c   ", 'A' + rowIndex, PORTAL_ENTRANCE);
+        } else {
+            printf("%c   %c   ", 'A' + rowIndex, TOWER_CHAR);
         }
         
-        int x;
-        for (x = 0; x < GRID_X; x++) {
-            printf("%c   ", gameBoard[y][x]);
+        int columnIndex;
+        for (columnIndex = 0; columnIndex < GRID_X; columnIndex++) {
+            printf("%c   ", gameState->gameBoard[rowIndex][columnIndex]);
         }
 
-        if (y == 3) {
-            printf("O   #");
-        }
-        else {
-            printf("#   #");
+        if (rowIndex == START_Y) {
+            printf("%c   %c", PORTAL_EXIT, TOWER_CHAR);
+        } else {
+            printf("%c   %c", TOWER_CHAR, TOWER_CHAR);
         }
         printf("\n");
     }
-    for (x = 1; x <= GRID_X + 4; x++) printf("#   ");
-    printf("\n");
-}
-
-int inBoundsCheck(int x, int y) {
-    if (x < 0 || x > GRID_X || y < 0 || y > GRID_Y) {
-        return 0;
+    
+    for (columnIndex = 1; columnIndex <= GRID_X + 4; columnIndex++) {
+        printf("#   ");
     }
-    return 1;
-} 
-void checkSurroundingTiles(int x, int y) {
-
+    printf("\n");
 }

@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "pathfinding.h": "c",
-        "game.h": "c"
+        "game.h": "c",
+        "stdio.h": "c",
+        "save_load.h": "c"
     }
 }

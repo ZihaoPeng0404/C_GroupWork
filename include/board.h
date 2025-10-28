@@ -3,8 +3,8 @@
 
 #include "game.h"
 
-void drawBoard(void);
-void resetBoard(void);
-int inBoundsCheck(int x, int y);
+/* Function declarations */
+void drawBoard(const GameState_t *gameState);
+void resetBoard(char gameBoard[GRID_Y][GRID_X]);
 
 #endif

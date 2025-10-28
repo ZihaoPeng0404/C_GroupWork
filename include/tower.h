@@ -3,7 +3,10 @@
 
 #include "game.h"
 
-void placeTower(void);
-int isValidCoordinate(int x, int y);
+/* Function declarations */
+void placeTower(GameState_t *gameState);
+int isValidCoordinate(int columnPos, int rowPos);
+int isLetter(char inputChar);
+int isDigit(char inputChar);
 
 #endif
